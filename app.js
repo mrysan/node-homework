@@ -2,21 +2,27 @@ const express = require("express");
 const app = express();
 const errorHandler = require("./middleware/error-handler");
 const notFoundHandler = require("./middleware/not-found");
+const userRouter = require("./routes/userRoutes");
 
+global.user_id = null;
+global.users = [];
+global.tasks = [];
+
+app.use(express.json({ limit: "1kb" }));
 app.use((req, res, next) => {
   console.log(req.method);
   console.log(req.path);
   console.log(req.query);
+  console.log(req.body);
   next();
 });
 
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
-  //   throw new Error("something bad happened!");
-});
+// routing
+app.use("/api/users", userRouter);
 
-app.post("/testpost", (req, res) => {
-  res.send("Yes, this is the post route!");
+app.get("/", (req, res) => {
+  res.json({ message: "Hello, World!" });
+  //   throw new Error("something bad happened!");
 });
 
 //middleware
